@@ -204,9 +204,9 @@ The application is fully responsive and optimized for:
 
 ## 📧 Contact Information
 
-- **Email:** [](mailto:)
-- **Portfolio:** []()
-- **LinkedIn:** []()
+- **Email:** [](mailto: sarfarajeee525@gmail.com)
+
+- **LinkedIn:** [](www.linkedin.com/in/sarfaraj-nawaz-chowdhury)
 
 ## 🚀 Getting Started
 
@@ -324,6 +324,6 @@ This project is created for portfolio purposes and professional demonstration.
 
 ---
 
-**Created with ❤️ by Sumon Ray**
+**Created with ❤️ by Sarfaraj Nawaz Chowdhury**
 
 *This project demonstrates advanced full-stack development skills, modern web technologies, and production-ready application architecture.*
