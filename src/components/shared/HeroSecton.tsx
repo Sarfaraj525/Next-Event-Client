@@ -7,6 +7,7 @@ interface Props {
   title2?: string;
   title3?: string;
 }
+
 const HeroBannerSecton = ({ title1, title2, title3 }: Props) => {
   return (
     <div className="relative w-full h-[50dvh]">
@@ -16,15 +17,20 @@ const HeroBannerSecton = ({ title1, title2, title3 }: Props) => {
         fill
         className="object-cover"
       />
-      <div className="absolute inset-0 flex items-center justify-left bg-black/70">
+
+      {/* Updated overlay color */}
+      <div className="absolute inset-0 flex items-center justify-left bg-slate-900/80">
         <div className="container px-4 py-12 mx-auto md:px-0">
-          <h1 className="text-4xl font-bold leading-tight tracking-wide text-white md:text-5xl lg:text-6xl">
-            <span className="my-2 text-[#3B82F6]">{title1}</span> <br />
-            <span>{title2}</span>
+
+          {/* Updated highlight + improved text contrast */}
+          <h1 className="text-4xl font-bold leading-tight tracking-wide text-white md:text-5xl lg:text-6xl drop-shadow-lg">
+            <span className="my-2 text-blue-400">{title1}</span> <br />
+            <span className="text-slate-100">{title2}</span>
             <br />
-            <span>{title3}</span>
+            <span className="text-slate-100">{title3}</span>
             <br />
           </h1>
+
         </div>
       </div>
     </div>
