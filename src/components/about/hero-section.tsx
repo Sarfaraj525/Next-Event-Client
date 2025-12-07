@@ -22,22 +22,24 @@ const HeroSection = forwardRef<HTMLDivElement, HeroSectionProps>(
         ref={ref}
         className="relative flex items-center justify-center h-screen overflow-hidden"
       >
-       
+        {/* Background Video & Layers */}
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 z-10 bg-black/50"></div>
           <div className="absolute inset-0 z-20 bg-gradient-to-b from-blue-900/30 to-indigo-900/30 mix-blend-multiply"></div>
+
           <video
             autoPlay
             loop
             muted
             playsInline
             className="absolute object-cover w-full h-full"
-            poster="/placeholder.svg?height=1080&width=1920"
+            poster="/images/fallback.jpg"
           >
             <source src="/images/video.mp4" type="video/mp4" />
-           
+
+            {/* FIXED FALLBACK IMAGE (your image element kept exactly, only corrected src) */}
             <Image
-              src="/images/video.mp4"
+              src="/images/fallback.jpg"
               alt="Events background"
               fill
               className="object-cover"
@@ -46,7 +48,7 @@ const HeroSection = forwardRef<HTMLDivElement, HeroSectionProps>(
           </video>
         </div>
 
-       
+        {/* Content */}
         <motion.div
           style={{ y: heroY, opacity: heroOpacity }}
           className="container relative z-30 px-4 mx-auto text-center "
@@ -59,30 +61,31 @@ const HeroSection = forwardRef<HTMLDivElement, HeroSectionProps>(
             <p className="px-4 py-2 mx-auto mb-6 text-sm text-white border-none rounded-md w-fit bg-white/20 backdrop-blur-sm">
               Connecting Communities Through Events
             </p>
+
             <h1 className="mx-auto mb-6 text-5xl font-bold tracking-tight text-white rounded-md md:text-6xl lg:text-7xl">
               Revolutionizing{" "}
-              <span className="tracking-wide text-transparent  drop-shadow-sm bg-gradient-to-r from-blue-300 to-purple-300 bg-clip-text">
-                   Event  Planning
+              <span className="tracking-wide text-transparent drop-shadow-sm bg-gradient-to-r from-blue-300 to-purple-300 bg-clip-text">
+                Event Planning
               </span>
-           
             </h1>
+
             <p className="max-w-3xl pb-8 mx-auto mb-10 text-xl leading-relaxed md:text-2xl text-white/90">
               We are building the most comprehensive platform for creating,
               managing, and participating in events of all types.
             </p>
           </motion.div>
 
+          {/* Buttons */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
             className="flex flex-wrap justify-center gap-12 mt-20"
-          ><Link href="/events">
-              
-               
-                 <NextButton name="Explore Events" onClick={() => {}} ></NextButton>
-              </Link>
-         
+          >
+            <Link href="/events">
+              <NextButton name="Explore Events" onClick={() => {}} />
+            </Link>
+
             <Button
               asChild
               size="lg"
@@ -93,7 +96,7 @@ const HeroSection = forwardRef<HTMLDivElement, HeroSectionProps>(
             </Button>
           </motion.div>
 
-         
+          {/* Scroll Indicator */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -117,6 +120,3 @@ const HeroSection = forwardRef<HTMLDivElement, HeroSectionProps>(
 HeroSection.displayName = "HeroSection";
 
 export default HeroSection;
-
-
-
