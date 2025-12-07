@@ -75,15 +75,18 @@ const ManagePaymentsTable = ({ payments, meta, filters }: ManagePaymentsTablePro
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+            className="border-blue-300 focus-visible:ring-blue-400"
           />
-          <Button onClick={handleSearch}>Search</Button>
+          <Button onClick={handleSearch} className="bg-blue-600 hover:bg-blue-700">
+            Search
+          </Button>
         </div>
 
         <Select
           defaultValue={filters.status || 'all'}
           onValueChange={(val) => updateQuery('status', val)}
         >
-          <SelectTrigger className="w-[150px]">
+          <SelectTrigger className="w-[150px] border-blue-300">
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>
@@ -98,7 +101,7 @@ const ManagePaymentsTable = ({ payments, meta, filters }: ManagePaymentsTablePro
           defaultValue={filters.method || 'all'}
           onValueChange={(val) => updateQuery('method', val)}
         >
-          <SelectTrigger className="w-[150px]">
+          <SelectTrigger className="w-[150px] border-blue-300">
             <SelectValue placeholder="Method" />
           </SelectTrigger>
           <SelectContent>
@@ -111,7 +114,7 @@ const ManagePaymentsTable = ({ payments, meta, filters }: ManagePaymentsTablePro
 
       {/* Table */}
       <div className="overflow-hidden border rounded-md bg-white">
-        <div className="grid grid-cols-12 px-4 py-2 text-xs font-medium text-gray-500 border-b bg-gray-100">
+        <div className="grid grid-cols-12 px-4 py-2 text-xs font-medium text-slate-700 border-b bg-slate-100">
           <div className="col-span-1">Select</div>
           <div className="col-span-3">User</div>
           <div className="col-span-3">Event</div>
@@ -125,50 +128,62 @@ const ManagePaymentsTable = ({ payments, meta, filters }: ManagePaymentsTablePro
           payments.map((payment) => (
             <div
               key={payment.id}
-              className="grid items-center grid-cols-12 px-4 py-3 border-b hover:bg-gray-50"
+              className="grid items-center grid-cols-12 px-4 py-3 border-b transition hover:bg-blue-50/40"
             >
               <div className="col-span-1">
                 <Checkbox />
               </div>
+
               <div className="flex items-center col-span-3 gap-3">
                 <Image
                   src={payment.user?.profileImage || '/avatar.png'}
                   alt={payment.user?.name || 'User'}
                   width={40}
                   height={40}
-                  className="rounded-full object-cover"
+                  className="rounded-full object-cover ring-2 ring-blue-200"
                 />
                 <div>
-                  <p className="text-sm font-medium">{payment.user?.name}</p>
-                  <p className="text-xs text-gray-500">{payment.user?.email}</p>
+                  <p className="text-sm font-medium text-slate-800">{payment.user?.name}</p>
+                  <p className="text-xs text-slate-500">{payment.user?.email}</p>
                 </div>
               </div>
+
               <div className="col-span-3">
-                <p className="text-sm font-medium">{payment.event?.title || 'N/A'}</p>
-                <p className="text-xs text-gray-500">{payment.event?.dateTime}</p>
+                <p className="text-sm font-medium text-slate-800">{payment.event?.title || 'N/A'}</p>
+                <p className="text-xs text-slate-500">{payment.event?.dateTime}</p>
               </div>
-              <div className="col-span-2 text-sm capitalize">{payment.method}</div>
-              <div className="col-span-1 text-sm">৳ {payment.amount}</div>
+
+              <div className="col-span-2 text-sm capitalize text-slate-700">
+                {payment.method}
+              </div>
+
+              <div className="col-span-1 text-sm font-semibold text-slate-800">
+                ৳ {payment.amount}
+              </div>
+
               <div className="col-span-1">
                 <Badge
-                  className={`text-xs capitalize ${
+                  className={`text-xs capitalize px-2 py-1 rounded ${
                     payment.status === 'Paid'
                       ? 'bg-green-100 text-green-700'
+                      : payment.status === 'Pending'
+                      ? 'bg-yellow-100 text-yellow-700'
                       : 'bg-red-100 text-red-700'
                   }`}
                 >
                   {payment.status}
                 </Badge>
               </div>
+
               <div className="col-span-1 text-right">
                 <Button size="icon" variant="ghost">
-                  <MoreHorizontal className="w-4 h-4 text-gray-500" />
+                  <MoreHorizontal className="w-4 h-4 text-slate-600" />
                 </Button>
               </div>
             </div>
           ))
         ) : (
-          <div className="py-6 text-sm text-center text-gray-500">No payments found.</div>
+          <div className="py-6 text-sm text-center text-slate-500">No payments found.</div>
         )}
       </div>
 
@@ -178,16 +193,20 @@ const ManagePaymentsTable = ({ payments, meta, filters }: ManagePaymentsTablePro
           variant="outline"
           disabled={meta.page <= 1}
           onClick={() => updateQuery('page', String(meta.page - 1))}
+          className="border-blue-300 text-blue-600 hover:bg-blue-50"
         >
           Previous
         </Button>
-        <span className="text-sm text-gray-600">
+
+        <span className="text-sm text-slate-600">
           Page {meta.page} of {Math.ceil(meta.total / meta.limit)}
         </span>
+
         <Button
           variant="outline"
           disabled={meta.page >= Math.ceil(meta.total / meta.limit)}
           onClick={() => updateQuery('page', String(meta.page + 1))}
+          className="border-blue-300 text-blue-600 hover:bg-blue-50"
         >
           Next
         </Button>
