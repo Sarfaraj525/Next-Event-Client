@@ -52,7 +52,7 @@ export default function DashboardAnalysis({ metaData }: { metaData: TDashboardMe
     return date.toLocaleDateString("en-US", {
       month: "short",
       year: "numeric",
-    }); // e.g., "May 2025"
+    });
   }
 
   function mergeChartData(barChartData: TDashboardMeta["barChartData"]) {
@@ -77,8 +77,9 @@ export default function DashboardAnalysis({ metaData }: { metaData: TDashboardMe
   }
 
   return (
-    <div className="min-h-screen p-4 md:p-6 ">
+    <div className="min-h-screen p-4 md:p-6">
       <div className="max-w-6xl mx-auto space-y-6">
+
         {/* Overview Cards */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {cards.map((card, index) => (
@@ -97,22 +98,38 @@ export default function DashboardAnalysis({ metaData }: { metaData: TDashboardMe
             </CardContent>
           </Card>
         </div>
+
       </div>
     </div>
   );
 }
 
-function StatCard({ title, value, icon }: { title: string; value: number | string; icon: React.ReactNode }) {
+function StatCard({
+  title,
+  value,
+  icon,
+}: {
+  title: string;
+  value: number | string;
+  icon: React.ReactNode;
+}) {
   return (
-    <Card className="bg-white">
+    <Card className="bg-white shadow-sm hover:shadow-md transition">
       <CardContent className="p-4 flex items-center space-x-4">
-        <div className="flex items-center justify-center w-12 h-12 text-indigo-500 bg-indigo-100 rounded-md">
+
+        {/* Updated Icon Color Box */}
+        <div className="flex items-center justify-center w-12 h-12 rounded-md 
+          bg-gradient-to-br from-teal-100 via-sky-100 to-indigo-100 
+          text-indigo-600 shadow-inner">
           {icon}
         </div>
+
+        {/* Details */}
         <div>
           <div className="text-sm text-gray-500">{title}</div>
-          <div className="text-2xl font-semibold">{value}</div>
+          <div className="text-2xl font-semibold text-gray-900">{value}</div>
         </div>
+
       </CardContent>
     </Card>
   );
