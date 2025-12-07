@@ -47,7 +47,7 @@ export default function AnimatedBackground() {
       }
 
       getGradientColor() {
-        const hue = Math.floor(Math.random() * 60) + 200; // Blues to purples
+        const hue = Math.floor(Math.random() * 60) + 200; 
         return `hsla(${hue}, 70%, 60%, ${this.opacity})`;
       }
 
@@ -131,8 +131,8 @@ export default function AnimatedBackground() {
 
       // Create dark gradient background
       const gradient = ctx!.createLinearGradient(0, 0, 0, canvas!.height);
-      gradient.addColorStop(0, "#0f172a"); // Darker navy blue
-      gradient.addColorStop(1, "#1e1b4b"); // Deep indigo
+      gradient.addColorStop(0, "#0f172a"); 
+      gradient.addColorStop(1, "#1e1b4b"); 
 
       ctx!.fillStyle = gradient;
       ctx!.fillRect(0, 0, canvas!.width, canvas!.height);
