@@ -1,10 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
+
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Review } from "@/app/types";
-import { deleteReview, updateReview } from "@/services/ReviewService";
+import { deleteReview, updateReview, myAllReviews } from "@/services/ReviewService";
 import { useUser } from "@/context/UserContext";
+
 import {
   Dialog,
   DialogTrigger,
@@ -13,44 +16,54 @@ import {
   DialogFooter,
   DialogClose,
 } from "@/components/ui/dialog";
+
 import Link from "next/link";
 import Image from "next/image";
-import { Star, Edit2, Trash2, X, Mailbox } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import { Star, Mailbox, X } from "lucide-react";
+
 import Title from "@/components/shared/Title";
 import NextButton from "@/components/shared/NextButton";
-import { myAllReviews } from "@/services/ReviewService";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
+
 import Loader from "@/components/ui/Loader/Loader";
+
 export default function MyReviewList() {
   const [reviews, setReviews] = useState<Review[]>([]);
   const { user } = useUser();
+
   const [editingReview, setEditingReview] = useState<Review | null>(null);
   const [deletingReviewId, setDeletingReviewId] = useState<string | null>(null);
   const [editForm, setEditForm] = useState({ rating: 0, comment: "" });
   const [loading, setLoading] = useState(true);
 
+  // Fetch reviews
   useEffect(() => {
+    const fetchReviews = async () => {
       setLoading(true);
-   const fetchReviews = async () => {
-    const data = await myAllReviews();
-    setReviews(data);
-    setLoading(false);
-   }
- 
-    fetchReviews(); 
-   } 
-  ,[deletingReviewId,editingReview])
+      const data = await myAllReviews();
+      setReviews(data);
+      setLoading(false);
+    };
+
+    fetchReviews();
+  }, [deletingReviewId, editingReview]);
+
+  // Delete
   const handleDeleteConfirm = async () => {
     if (!deletingReviewId) return;
+
     try {
       const res = await deleteReview(deletingReviewId);
-      if (res.success) {
-        toast.success("Review deleted successfully");
-      } else {
-        toast.error(res.message || "Failed to delete review");
-      }
+
+      if (res.success) toast.success("Review deleted successfully");
+      else toast.error(res.message || "Failed to delete review");
     } catch (err: any) {
       toast.error(err.message || "Failed to delete review");
     } finally {
@@ -58,14 +71,19 @@ export default function MyReviewList() {
     }
   };
 
+  // Edit
   const handleEdit = (review: Review) => {
     setEditingReview(review);
-    setEditForm({ rating: review.rating, comment: review.comment });
+    setEditForm({
+      rating: review.rating,
+      comment: review.comment,
+    });
   };
 
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingReview) return;
+
     try {
       await updateReview(editingReview.id, editForm);
       toast.success("Review updated successfully");
@@ -80,7 +98,11 @@ export default function MyReviewList() {
       {[1, 2, 3, 4, 5].map((star) => (
         <Star
           key={star}
-          className={`w-4 h-4 ${star <= rating ? "fill-amber-400 text-amber-400" : "fill-gray-200 text-gray-200"}`}
+          className={`w-4 h-4 ${
+            star <= rating
+              ? "fill-amber-400 text-amber-400"
+              : "fill-gray-200 text-gray-300"
+          }`}
         />
       ))}
     </div>
@@ -96,25 +118,35 @@ export default function MyReviewList() {
       <div className="flex items-center justify-between pb-6">
         <Title title="My Reviews" />
       </div>
- {
-  loading && <div className="flex items-center justify-center min-h-screen"><Loader></Loader>
 
-  </div>
- }
-      {!loading && !reviews.length ? (
+      {/* Loader */}
+      {loading && (
+        <div className="flex items-center justify-center min-h-[40vh]">
+          <Loader />
+        </div>
+      )}
+
+      {/* No reviews */}
+      {!loading && !reviews.length && (
         <div className="flex flex-col items-center justify-center p-8 text-center bg-gradient-to-br from-[#E3F2FD] via-[#BBDEFB] to-[#E3F2FD] rounded-xl">
           <Mailbox className="w-12 h-12 mb-4 text-[#1E3A8A]" />
-          <h3 className="mb-2 text-xl font-semibold text-[#1E3A8A]">No Reviews Yet</h3>
+          <h3 className="mb-2 text-xl font-semibold text-[#1E3A8A]">
+            No Reviews Yet
+          </h3>
           <p className="text-[#475569] max-w-md">
-            You haven't submitted any reviews yet. Your reviews will appear here once you create them.
+            You haven't submitted any reviews yet. Once you create a review, it
+            will appear here.
           </p>
         </div>
-      ) : (
+      )}
+
+      {/* Review List */}
+      {!loading && reviews.length > 0 && (
         <div className="space-y-4">
           {reviews.map((review) => (
             <div
               key={review.id}
-              className="p-6 transition-shadow bg-white border border-gray-100 shadow-sm rounded-xl hover:shadow-md"
+              className="p-6 bg-white border border-gray-100 shadow-sm rounded-xl hover:shadow-md transition-shadow"
             >
               <div className="flex flex-col gap-4 md:flex-row md:justify-between">
                 <div className="flex-1">
@@ -127,8 +159,12 @@ export default function MyReviewList() {
                         className="object-cover"
                       />
                     </div>
+
                     <div>
-                      <h3 className="font-medium text-gray-900">{user?.name || "User"}</h3>
+                      <h3 className="font-medium text-gray-900">
+                        {user?.name || "User"}
+                      </h3>
+
                       <div className="flex items-center gap-2">
                         {renderStars(review.rating)}
                         <span className="text-sm text-gray-500">
@@ -143,7 +179,7 @@ export default function MyReviewList() {
                   {review.event && (
                     <Link
                       href={`/events/${review.event.slug}`}
-                      className="flex items-center gap-3 p-3 mt-4 -mx-3 -mb-3 text-sm transition-colors rounded-lg hover:bg-gray-50"
+                      className="flex items-center gap-3 p-3 mt-4 -mx-3 -mb-3 text-sm rounded-lg hover:bg-gray-50"
                     >
                       <div className="relative w-12 h-12 overflow-hidden rounded-md">
                         <Image
@@ -153,31 +189,46 @@ export default function MyReviewList() {
                           className="object-cover"
                         />
                       </div>
-                      <span className="font-medium text-[#1E3A8A]">{review.event.title}</span>
+
+                      <span className="font-medium text-[#1E3A8A]">
+                        {review.event.title}
+                      </span>
                     </Link>
                   )}
                 </div>
 
+                {/* Buttons */}
                 <div className="flex gap-2 md:flex-col">
-                  <NextButton name="Edit"onClick={() => handleEdit(review)} />
-                 
+                  <NextButton name="Edit" onClick={() => handleEdit(review)} />
+
+                  {/* Delete Modal */}
                   <Dialog>
                     <DialogTrigger asChild>
-                        <NextButton name="Delete" onClick={() => setDeletingReviewId(review.id)} />
-                    
+                      <NextButton
+                        name="Delete"
+                        onClick={() => setDeletingReviewId(review.id)}
+                      />
                     </DialogTrigger>
+
                     <DialogContent className="max-w-sm">
                       <DialogHeader>
                         <h4 className="text-lg font-semibold">Delete Review</h4>
                       </DialogHeader>
-                      <p className="text-gray-600">Are you sure you want to delete this review? This action cannot be undone.</p>
+
+                      <p className="text-gray-600">
+                        Are you sure you want to delete this review? This action
+                        cannot be undone.
+                      </p>
+
                       <DialogFooter className="gap-2">
                         <DialogClose asChild>
-                      
-               <NextButton name="Update"  />
+                          <NextButton name="Cancel" />
                         </DialogClose>
-                          <NextButton name="Delete" onClick={handleDeleteConfirm} />
-                       
+
+                        <NextButton
+                          name="Delete"
+                          onClick={handleDeleteConfirm}
+                        />
                       </DialogFooter>
                     </DialogContent>
                   </Dialog>
@@ -188,49 +239,72 @@ export default function MyReviewList() {
         </div>
       )}
 
-    
+      {/* Edit Review Modal */}
       {editingReview && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="w-full max-w-md p-6 mx-4 bg-white shadow-xl rounded-xl">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-3xl font-semibold text-[#1E3A8A]">Edit Review</h3>
+              <h3 className="text-3xl font-semibold text-[#1E3A8A]">
+                Edit Review
+              </h3>
+
               <button
                 onClick={() => setEditingReview(null)}
-                className="p-1 text-gray-400 rounded-full hover:bg-gray-100 hover:text-gray-500"
+                className="p-1 text-gray-400 rounded-full hover:bg-gray-100 hover:text-gray-600"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
+
             <form onSubmit={handleUpdate} className="space-y-4">
+              {/* Rating */}
               <div>
-                <label className="block mb-1.5 text-sm font-medium text-gray-700">Rating</label>
+                <label className="block mb-1.5 text-sm font-medium text-gray-700">
+                  Rating
+                </label>
+
                 <Select
                   value={editForm.rating.toString()}
-                  onValueChange={(value) => setEditForm({ ...editForm, rating: Number(value) })}
+                  onValueChange={(val) =>
+                    setEditForm({ ...editForm, rating: Number(val) })
+                  }
                 >
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select rating" />
                   </SelectTrigger>
-                  <SelectContent className="w-full bg-white">
+
+                  <SelectContent>
                     {[1, 2, 3, 4, 5].map((num) => (
-                      <SelectItem className="hover:bg-gradient-to-br from-[#E3F2FD] via-[#BBDEFB] to-[#E3F2FD]" key={num} value={num.toString()}>
+                      <SelectItem key={num} value={num.toString()}>
                         {num} Star{num > 1 ? "s" : ""}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
+
+              {/* Comment */}
               <div>
-                <label className="block mb-1.5 text-sm font-medium text-gray-700">Comment</label>
+                <label className="block mb-1.5 text-sm font-medium text-gray-700">
+                  Comment
+                </label>
+
                 <Textarea
                   value={editForm.comment}
-                  onChange={(e) => setEditForm({ ...editForm, comment: e.target.value })}
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, comment: e.target.value })
+                  }
                   rows={4}
                 />
               </div>
+
+              {/* Buttons */}
               <div className="flex justify-end gap-2 pt-2">
-               <NextButton name="Cancel" onClick={() => setEditingReview(null)} />
-               <NextButton name="Update"  />
+                <NextButton
+                  name="Cancel"
+                  onClick={() => setEditingReview(null)}
+                />
+                <NextButton name="Update" />
               </div>
             </form>
           </div>
