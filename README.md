@@ -272,8 +272,8 @@ npm run dev
 ## 🧪 Testing Credentials
 
 ### Admin Access
-- **Email:** admin@nextevent.com
-- **Password:** admin123
+- **Email:** admin2@gmail.com
+- **Password:** Admin@123
 
 ### Demo User
 - **Email:** user@nextevent.com
